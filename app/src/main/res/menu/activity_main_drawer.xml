@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <group android:checkableBehavior="single">
+        <item
+            android:id="@+id/news"
+            android:icon="@drawable/news"
+            android:title="新闻" />
+        <item
+            android:id="@+id/picture"
+            android:icon="@drawable/picter"
+            android:title="图片" />
+        <item
+            android:id="@+id/video"
+            android:icon="@drawable/video"
+            android:title="视频" />
+        <item
+            android:id="@+id/music"
+            android:icon="@drawable/music"
+            android:title="音乐" />
+    </group>
+
+
+
+</menu>
