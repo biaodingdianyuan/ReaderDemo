@@ -29,14 +29,12 @@ public class WebViewActivity extends AppCompatActivity {
 
     }
     @Override
-    //设置回退
-    //覆盖Activity类的onKeyDown(int keyCoder,KeyEvent event)方法
-    public boolean onKeyDown(int keyCode, KeyEvent event) {
-        if ((keyCode == KeyEvent.KEYCODE_BACK) && webview.canGoBack()) {
-            webview.goBack(); //goBack()表示返回WebView的上一页面
-            return true;
+    public void onBackPressed() {
+        if (webview.canGoBack()) {
+            webview.goBack();
         }
-        return false;
+        super.onBackPressed();
     }
+
 
 }

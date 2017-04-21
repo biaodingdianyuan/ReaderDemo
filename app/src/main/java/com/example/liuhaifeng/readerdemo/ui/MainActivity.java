@@ -2,18 +2,13 @@ package com.example.liuhaifeng.readerdemo.ui;
 
 import android.content.Intent;
 import android.os.Bundle;
-
 import android.support.design.widget.NavigationView;
-import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.widget.Toast;
-
 import com.example.liuhaifeng.readerdemo.tool.MyActionBarDrawerToggle;
 import com.example.liuhaifeng.readerdemo.R;
 import com.example.liuhaifeng.readerdemo.ui.Music.MusicFragment;
@@ -43,7 +38,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         navigationView.setNavigationItemSelectedListener(this);
         toolbar.setOnMenuItemClickListener(this);
-        getFragmentManager().beginTransaction().replace(R.id.fragment, new NewsFragment()).commit();
+        getSupportFragmentManager().beginTransaction().replace(R.id.fragment,NewsFragment.newInstance(0)).commit();
+
     }
 
     private void init() {
@@ -62,27 +58,24 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     public boolean onNavigationItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.music:
-                getFragmentManager().beginTransaction().replace(R.id.fragment, new MusicFragment()).commit();
+                getSupportFragmentManager().beginTransaction().replace(R.id.fragment, new MusicFragment()).commit();
 //                Toast.makeText(MainActivity.this, "music", Toast.LENGTH_SHORT).show();
                 break;
             case R.id.news:
-                getFragmentManager().beginTransaction().replace(R.id.fragment, new NewsFragment()).commit();
+                getSupportFragmentManager().beginTransaction().replace(R.id.fragment, NewsFragment.newInstance(0)).commit();
                 break;
             case R.id.picture:
-                getFragmentManager().beginTransaction().replace(R.id.fragment, new PictureFragment()).commit();
+                getSupportFragmentManager().beginTransaction().replace(R.id.fragment, new PictureFragment()).commit();
 //                Toast.makeText(MainActivity.this, "picture", Toast.LENGTH_SHORT).show();
                 break;
             case R.id.video:
-                getFragmentManager().beginTransaction().replace(R.id.fragment, new VideoFragment()).commit();
+                getSupportFragmentManager().beginTransaction().replace(R.id.fragment, new VideoFragment()).commit();
 //                Toast.makeText(MainActivity.this, "video", Toast.LENGTH_SHORT).show();
                 break;
         }
         mDrawerLayout.closeDrawers();
-
-
         return false;
     }
-
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -102,7 +95,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             case R.id.feedback:
                 break;
         }
-
         return false;
     }
 

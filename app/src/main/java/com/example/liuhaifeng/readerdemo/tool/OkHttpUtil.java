@@ -1,9 +1,23 @@
 package com.example.liuhaifeng.readerdemo.tool;
 
+import android.os.Handler;
+import android.os.Message;
 import android.util.Log;
+
+import com.example.liuhaifeng.readerdemo.Myapplication;
+import com.example.liuhaifeng.readerdemo.ui.news.Lv_fragment_new;
+import com.example.liuhaifeng.readerdemo.ui.news.NewsBean;
+import com.example.liuhaifeng.readerdemo.ui.news.Urls;
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
+import com.google.gson.stream.JsonReader;
+import com.squareup.okhttp.Request;
+import com.squareup.okhttp.Response;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.StringReader;
+import java.lang.reflect.Type;
 import java.security.KeyManagementException;
 import java.security.KeyStore;
 import java.security.KeyStoreException;
@@ -13,6 +27,7 @@ import java.security.cert.Certificate;
 import java.security.cert.CertificateException;
 import java.security.cert.CertificateFactory;
 import java.security.cert.X509Certificate;
+import java.util.ArrayList;
 
 import javax.net.ssl.SSLContext;
 import javax.net.ssl.TrustManagerFactory;
@@ -22,42 +37,35 @@ import javax.net.ssl.TrustManagerFactory;
  */
 
 public class OkHttpUtil {
-    public static SSLContext getSafeFromServer(InputStream inputStream) {
-        SSLContext sslContext = null;
+    public String result = null;
+
+    Handler myhandler = null;
+
+    public void getdata(String num, Handler handler) {
+        myhandler = handler;
+        String url = Urls.URL + num + "&pagesize=20&callback=?&justList=1";
+        Type listType = new TypeToken<NewsBean>() {
+        }.getType();
+        NewsBean news=null;
+        Request request = new Request.Builder().get().url(url).build();
         try {
-            CertificateFactory certificateFactory = CertificateFactory.getInstance("x.509");
-            Certificate cert = certificateFactory.generateCertificate(inputStream);
-            Log.d("cert key", ((X509Certificate) cert).getPublicKey().toString());
+            Response response = Myapplication.myokhttpclient.newCall(request).execute();
+            if (response.isSuccessful()) {
 
-            //生成包含服务器证书的keyStore
-            String keyStoreType = KeyStore.getDefaultType();
-            Log.d("keystore type", keyStoreType);
-            KeyStore keyStore = KeyStore.getInstance(keyStoreType);
-            keyStore.load(null, null);
-            keyStore.setCertificateEntry("cert", cert);
+                Gson gson = new Gson();
+                String json=response.body().string();
+                int end=json.length()-1;
+                Log.d("****",end+"");
 
-            //用含有服务器证书的keystore生成一个TrustManager
-            String tmfAlgorithm = TrustManagerFactory.getDefaultAlgorithm();
-            Log.d("tmfAlgorithm", tmfAlgorithm);
-            TrustManagerFactory trustManagerFactory = TrustManagerFactory.getInstance(tmfAlgorithm);
-            trustManagerFactory.init(keyStore);
-
-            //生成一个使用我们的TrustManager的SSLContext
-            sslContext = SSLContext.getInstance("TLS");
-            sslContext.init(null, trustManagerFactory.getTrustManagers(),new SecureRandom());
-
-        } catch (CertificateException e) {
-            e.printStackTrace();
-        } catch (KeyStoreException e) {
-            e.printStackTrace();
-        } catch (NoSuchAlgorithmException e) {
-            e.printStackTrace();
+                Log.d("****",json.substring(2,end));
+               news=gson.fromJson(json.substring(2,end),new TypeToken<NewsBean>(){}.getType());
+                myhandler.obtainMessage(1, news).sendToTarget();
+            }
         } catch (IOException e) {
-            e.printStackTrace();
-        } catch (KeyManagementException e) {
             e.printStackTrace();
         }
 
-        return sslContext;
+
     }
+
 }
