@@ -46,19 +46,20 @@ public class OkHttpUtil {
         String url = Urls.URL + num + "&pagesize=20&callback=?&justList=1";
         Type listType = new TypeToken<NewsBean>() {
         }.getType();
-        NewsBean news=null;
+        NewsBean news = null;
         Request request = new Request.Builder().get().url(url).build();
         try {
             Response response = Myapplication.myokhttpclient.newCall(request).execute();
             if (response.isSuccessful()) {
 
                 Gson gson = new Gson();
-                String json=response.body().string();
-                int end=json.length()-1;
-                Log.d("****",end+"");
+                String json = response.body().string();
+                int end = json.length() - 1;
+                Log.d("****", end + "");
 
-                Log.d("****",json.substring(2,end));
-               news=gson.fromJson(json.substring(2,end),new TypeToken<NewsBean>(){}.getType());
+                Log.d("****", json.substring(2, end));
+                news = gson.fromJson(json.substring(2, end), new TypeToken<NewsBean>() {
+                }.getType());
                 myhandler.obtainMessage(1, news).sendToTarget();
             }
         } catch (IOException e) {
