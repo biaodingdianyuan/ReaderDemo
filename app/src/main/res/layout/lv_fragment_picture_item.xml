@@ -1,38 +1,29 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:orientation="vertical"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
-
-
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical">
 
     <com.wang.avi.AVLoadingIndicatorView
+        android:layout_gravity="center"
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
-        android:id="@+id/lv_new_loading"
+        android:id="@+id/lv_picture_loading"
         app:indicator="BallSpinFadeLoader"
         app:indicator_color="#FF68228B"
-        android:layout_gravity="center"
         />
     <android.support.v4.widget.SwipeRefreshLayout
+        android:id="@+id/lv_pivture_swipe"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_weight="1"
-        android:id="@+id/lv_new_srl"
-        android:visibility="gone"
-        android:layout_below="@+id/lv_new_img">
-
+        android:layout_height="match_parent">
 
         <android.support.v7.widget.RecyclerView
-
-            android:id="@+id/lv_new_Rv"
+            android:id="@+id/lv_picture_recycle"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_below="@+id/lv_new_img">
+            android:layout_height="match_parent">
 
         </android.support.v7.widget.RecyclerView>
 
     </android.support.v4.widget.SwipeRefreshLayout>
-
 </LinearLayout>

@@ -30,6 +30,7 @@
 
         </activity>
         <activity android:name=".ui.WebViewActivity"/>
+        <activity android:name=".ui.news.DetailedActivity" android:theme="@style/AppTheme.NoActionBar"/>
     </application>
 
 </manifest>

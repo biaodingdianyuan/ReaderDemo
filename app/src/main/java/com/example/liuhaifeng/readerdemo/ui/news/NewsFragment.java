@@ -19,14 +19,7 @@ import com.example.liuhaifeng.readerdemo.R;
 public class NewsFragment extends Fragment {
     private Fragment_new_adapter fragment_new_adapter;
 
-    public static NewsFragment newInstance(int param1) {
-        NewsFragment fragment = new NewsFragment();
-        Bundle args = new Bundle();
-        args.putInt("key", param1);
 
-        fragment.setArguments(args);
-        return fragment;
-    }
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

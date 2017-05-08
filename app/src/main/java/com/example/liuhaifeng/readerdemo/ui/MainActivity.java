@@ -1,6 +1,7 @@
 package com.example.liuhaifeng.readerdemo.ui;
 
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
 import android.support.v4.widget.DrawerLayout;
@@ -9,6 +10,8 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.WindowManager;
+
 import com.example.liuhaifeng.readerdemo.tool.MyActionBarDrawerToggle;
 import com.example.liuhaifeng.readerdemo.R;
 import com.example.liuhaifeng.readerdemo.ui.Music.MusicFragment;
@@ -31,6 +34,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
         init();
         toolbar.inflateMenu(R.menu.other);
         setSupportActionBar(toolbar);
@@ -38,7 +42,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         navigationView.setNavigationItemSelectedListener(this);
         toolbar.setOnMenuItemClickListener(this);
-        getSupportFragmentManager().beginTransaction().replace(R.id.fragment,NewsFragment.newInstance(0)).commit();
+        getSupportFragmentManager().beginTransaction().replace(R.id.fragment,new NewsFragment()).commit();
 
     }
 
@@ -62,7 +66,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 //                Toast.makeText(MainActivity.this, "music", Toast.LENGTH_SHORT).show();
                 break;
             case R.id.news:
-                getSupportFragmentManager().beginTransaction().replace(R.id.fragment, NewsFragment.newInstance(0)).commit();
+                getSupportFragmentManager().beginTransaction().replace(R.id.fragment, new NewsFragment()).commit();
                 break;
             case R.id.picture:
                 getSupportFragmentManager().beginTransaction().replace(R.id.fragment, new PictureFragment()).commit();

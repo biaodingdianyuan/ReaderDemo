@@ -1,6 +1,7 @@
 package com.example.liuhaifeng.readerdemo;
 
 import android.app.Application;
+import android.app.FragmentContainer;
 
 import com.squareup.okhttp.OkHttpClient;
 
@@ -16,6 +17,7 @@ public class Myapplication extends Application {
         super.onCreate();
 
         myokhttpclient=new OkHttpClient();
+
 
     }
 }
