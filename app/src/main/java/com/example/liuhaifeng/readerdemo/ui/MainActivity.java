@@ -1,5 +1,6 @@
 package com.example.liuhaifeng.readerdemo.ui;
 
+import android.app.Fragment;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
@@ -10,6 +11,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.view.WindowManager;
 
 import com.example.liuhaifeng.readerdemo.tool.MyActionBarDrawerToggle;
@@ -20,12 +22,14 @@ import com.example.liuhaifeng.readerdemo.ui.Video.VideoFragment;
 import com.example.liuhaifeng.readerdemo.ui.news.NewsFragment;
 import com.google.zxing.integration.android.IntentIntegrator;
 import com.google.zxing.integration.android.IntentResult;
+import com.mxn.soul.flowingdrawer_core.ElasticDrawer;
+import com.mxn.soul.flowingdrawer_core.FlowingDrawer;
 
 
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener, Toolbar.OnMenuItemClickListener {
 
     private Toolbar toolbar;
-    private DrawerLayout mDrawerLayout;
+    private FlowingDrawer mDrawerLayout;
     private ActionBarDrawerToggle mDrawerToggle;
     private NavigationView navigationView;
     private DrawerLayout drawerLayout;
@@ -34,28 +38,34 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
         init();
         toolbar.inflateMenu(R.menu.other);
+        toolbar.setNavigationIcon(R.mipmap.navigation);
         setSupportActionBar(toolbar);
         drawertoggle();
+        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mDrawerLayout.toggleMenu();
+            }
+        });
 
         navigationView.setNavigationItemSelectedListener(this);
         toolbar.setOnMenuItemClickListener(this);
-        getSupportFragmentManager().beginTransaction().replace(R.id.fragment,new NewsFragment()).commit();
+        getSupportFragmentManager().beginTransaction().replace(R.id.fragment, new NewsFragment()).commit();
 
     }
 
     private void init() {
         toolbar = (Toolbar) findViewById(R.id.toolbar);
-        mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
+        mDrawerLayout = (FlowingDrawer) findViewById(R.id.drawer_layout);
         navigationView = (NavigationView) findViewById(R.id.nav_view);
+
     }
 
     private void drawertoggle() {
-        mDrawerToggle = new MyActionBarDrawerToggle(this, mDrawerLayout, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
-        mDrawerToggle.syncState();
-        mDrawerLayout.setDrawerListener(mDrawerToggle);
+        mDrawerLayout.setTouchMode(ElasticDrawer.TOUCH_MODE_BEZEL);
+
     }
 
     @Override
@@ -77,7 +87,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 //                Toast.makeText(MainActivity.this, "video", Toast.LENGTH_SHORT).show();
                 break;
         }
-        mDrawerLayout.closeDrawers();
+//        mDrawerLayout.closeDrawers();
+        mDrawerLayout.closeMenu();
         return false;
     }
 

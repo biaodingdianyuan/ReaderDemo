@@ -22,9 +22,9 @@ public class OkHttpUtil {
 
     Handler myhandler = null;
 
-    public void getdata(String num, Handler handler) {
+    public void getdata(String num, Handler handler,int page) {
         myhandler = handler;
-        String url = Urls.URL_NEW_LIST + num + "&pagesize=20&callback=?&justList=1";
+        String url = Urls.URL_NEW_LIST + num + "&pagesize=20&callback=?&justList=1&page="+page;
         Type listType = new TypeToken<NewsBean>() {
         }.getType();
         NewsBean news = null;

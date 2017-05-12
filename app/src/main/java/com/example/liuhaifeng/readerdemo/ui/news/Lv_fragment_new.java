@@ -41,9 +41,7 @@ import butterknife.InjectView;
 public class Lv_fragment_new extends Fragment {
 
 
-    @InjectView(R.id.lv_new_Rv)
     RecyclerView lvNewRv;
-    @InjectView(R.id.lv_new_srl)
     SwipeRefreshLayout lvNewSrl;
 
     RollPagerView rollPagerView;
@@ -53,7 +51,8 @@ public class Lv_fragment_new extends Fragment {
     RecycleAdapter adapter_recy;
     NewsBean news;
     List<Data> d;
-    @InjectView(R.id.lv_new_loading)
+    int page=1;
+    LinearLayoutManager linearLayoutManager;
     AVLoadingIndicatorView lvNewLoading;
     private String mParam1;
     public Handler myhandler = new Handler() {
@@ -63,17 +62,11 @@ public class Lv_fragment_new extends Fragment {
             switch (msg.what) {
                 case 1:
                     rollPagerView = (RollPagerView) LayoutInflater.from(getActivity()).inflate(R.layout.picturecarouselview, lvNewRv, false);
-
                     lvNewLoading.setVisibility(View.GONE);
                     lvNewSrl.setVisibility(View.VISIBLE);
-
-
                     img = new String[3];
                     title = new String[3];
                     news = (NewsBean) msg.obj;
-                    d.clear();
-
-
                     for (int i = 0; i < 3; i++) {
                         if (news.getData().get(i).getTop_image() != "") {
                             title[i] = news.getData().get(i).getTitle();
@@ -91,7 +84,6 @@ public class Lv_fragment_new extends Fragment {
                             img[i] = "";
                         }
                     }
-
                     if (!img[0].equals("") && !img[1].equals("") && !img[2].equals("")) {
                         rollPagerView.setVisibility(View.VISIBLE);
                         rollPagerView.setAdapter(new TestNormalAdapter(img, title));
@@ -99,13 +91,9 @@ public class Lv_fragment_new extends Fragment {
                     } else {
                         rollPagerView.setVisibility(View.GONE);
                     }
-
                     d.addAll(news.getData());
                     adapter_recy.notifyDataSetChanged();
-//                    lvNewRv.scrollToPosition(adapter_recy.getItemCount() - 1);
                     lvNewSrl.setRefreshing(false);
-
-
                     break;
             }
         }
@@ -131,59 +119,65 @@ public class Lv_fragment_new extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.fragment_lv, container, false);
-        ButterKnife.inject(this, view);
+        init(view);
         new Thread(new Runnable() {
             @Override
             public void run() {
-                new OkHttpUtil().getdata(mParam1, myhandler);
+                d.clear();
+                new OkHttpUtil().getdata(mParam1, myhandler,1);
             }
         }).start();
-
-
         d = new ArrayList<Data>();
-
-
         adapter_recy = new RecycleAdapter(getActivity(), d,mParam1);
         View p = inflater.inflate(R.layout.picturecarouselview, null);
-
-//
-
-        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getActivity());
-
-        lvNewRv.setLayoutManager(new LinearLayoutManager(getActivity(), LinearLayout.VERTICAL, false));
-        linearLayoutManager.setOrientation(OrientationHelper.VERTICAL);
+        linearLayoutManager = new LinearLayoutManager(getActivity());
+        linearLayoutManager=new LinearLayoutManager(getActivity(), LinearLayout.VERTICAL, false);
+        lvNewRv.setLayoutManager(linearLayoutManager);
         lvNewRv.setItemAnimator(new DefaultItemAnimator());
-//        lvNewRv.addView(p,0);
         lvNewRv.setAdapter(adapter_recy);
-
         lvNewSrl.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
                 new Thread(new Runnable() {
                     @Override
                     public void run() {
-                        new OkHttpUtil().getdata(mParam1, myhandler);
+                        d.clear();
+                        new OkHttpUtil().getdata(mParam1, myhandler,1);
                     }
                 }).start();
             }
         });
-        //TODO 添加上拉加载功能
+
         lvNewRv.addOnScrollListener(new RecyclerView.OnScrollListener() {
+            int listitemposition;
             @Override
             public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
                 super.onScrollStateChanged(recyclerView, newState);
+                if(listitemposition+1==adapter_recy.getItemCount()&& newState==RecyclerView.SCROLL_STATE_IDLE){
+                    page=page+1;
+                    new Thread(new Runnable() {
+                        @Override
+                        public void run() {
+                            new OkHttpUtil().getdata(mParam1, myhandler,page);
+                        }
+                    }).start();
+                }
             }
-
             @Override
             public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
                 super.onScrolled(recyclerView, dx, dy);
+                listitemposition=linearLayoutManager.findLastVisibleItemPosition();
             }
         });
-
-
         return view;
     }
 
+    public void init(View views){
+        lvNewRv= (RecyclerView) views.findViewById(R.id.lv_new_Rv);
+        lvNewSrl= (SwipeRefreshLayout) views.findViewById(R.id.lv_new_srl);
+        lvNewLoading= (AVLoadingIndicatorView) views.findViewById(R.id.lv_new_loading);
+
+    }
 
     @Override
     public void onDestroyView() {

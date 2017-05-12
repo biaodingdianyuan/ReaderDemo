@@ -21,16 +21,21 @@
 
 
     </LinearLayout>
-<android.support.v4.widget.DrawerLayout
+<com.mxn.soul.flowingdrawer_core.FlowingDrawer
     android:id="@+id/drawer_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:openDrawer="start"
+    app:edPosition="1"
+
     >
 <FrameLayout
     android:layout_width="match_parent"
     android:id="@+id/fragment"
     android:layout_height="match_parent"></FrameLayout>
+    <com.mxn.soul.flowingdrawer_core.FlowingMenuLayout
+        android:id="@+id/menulayout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
     <android.support.design.widget.NavigationView
         android:id="@+id/nav_view"
         android:layout_width="match_parent"
@@ -38,5 +43,6 @@
         android:layout_gravity="start"
         app:headerLayout="@layout/nav_header_main"
         app:menu="@menu/activity_main_drawer" />
-</android.support.v4.widget.DrawerLayout>
+    </com.mxn.soul.flowingdrawer_core.FlowingMenuLayout>
+</com.mxn.soul.flowingdrawer_core.FlowingDrawer>
 </LinearLayout>

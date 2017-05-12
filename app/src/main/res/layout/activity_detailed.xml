@@ -16,6 +16,10 @@
                 android:layout_width="wrap_content"
                 android:layout_height= "wrap_content"
                 android:text="4545454545"
+                android:textSize="20dp"
+                android:maxEms="10"
+                android:maxLines="1"
+                android:ellipsize="end"
                 android:id="@+id/news_detailed_toolbar_title"
                 android:layout_alignParentTop="true"
                 android:layout_centerHorizontal="true" />
@@ -35,17 +39,22 @@
         android:orientation="vertical"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
-        <ImageView
+        <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:id="@+id/news_detailed_img"
+            android:id="@+id/title_detailed"
+            android:textSize="25dp"
+            android:textStyle="bold"
+            android:layout_margin="5dp"
+            android:gravity="center"
             />
+
         <WebView
+            android:layout_margin="5dp"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:id="@+id/news_detailed"
             />
-
 
     </LinearLayout>
 

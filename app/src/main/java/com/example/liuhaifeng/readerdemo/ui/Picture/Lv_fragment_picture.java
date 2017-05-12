@@ -58,17 +58,14 @@ import static com.example.liuhaifeng.readerdemo.Myapplication.myokhttpclient;
  */
 
 public class Lv_fragment_picture extends Fragment {
-    @InjectView(R.id.lv_picture_recycle)
     RecyclerView lvPictureRecycle;
-    @InjectView(R.id.lv_pivture_swipe)
     SwipeRefreshLayout lvPivtureSwipe;
-    @InjectView(R.id.lv_picture_loading)
     AVLoadingIndicatorView lvPictureLoading;
     private String mParam1;
     private List<PictureBean.TngouBean> L = null;
     private PictureAdapter adapter;
     int width = 0;
-    int index=1;
+    int index = 1;
     StaggeredGridLayoutManager layoutManager;
 
     private Handler myhandler = new Handler() {
@@ -81,15 +78,12 @@ public class Lv_fragment_picture extends Fragment {
                     lvPictureLoading.setVisibility(View.GONE);
                     lvPivtureSwipe.setVisibility(View.VISIBLE);
                     lvPivtureSwipe.setRefreshing(false);
-                    L.addAll(((PictureBean) msg.obj).getTngou());
-
+                     L.addAll(((PictureBean) msg.obj).getTngou());
                     break;
-
             }
             adapter.notifyDataSetChanged();
         }
     };
-
 
     public static Lv_fragment_picture newInstance(int param1) {
         Lv_fragment_picture fragment = new Lv_fragment_picture();
@@ -111,25 +105,23 @@ public class Lv_fragment_picture extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.lv_fragment_picture_item, container, false);
-        ButterKnife.inject(this, view);
+        init(view);
         lvPictureLoading.setVisibility(View.VISIBLE);
         lvPivtureSwipe.setVisibility(View.GONE);
         L = new ArrayList<PictureBean.TngouBean>();
         adapter = new PictureAdapter(getContext(), L);
-        layoutManager =new StaggeredGridLayoutManager(3, StaggeredGridLayoutManager.VERTICAL);
+        layoutManager = new StaggeredGridLayoutManager(3, StaggeredGridLayoutManager.VERTICAL);
         lvPictureRecycle.setLayoutManager(layoutManager);
         lvPictureRecycle.setAdapter(adapter);
         SpacesItemDecoration decoration = new SpacesItemDecoration(8);
         lvPictureRecycle.addItemDecoration(decoration);
-
         width = getActivity().getWindowManager().getDefaultDisplay().getWidth();
-
         lvPivtureSwipe.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
                 L.clear();
-                index=1;
-                getdata(index,mParam1);
+                index = 1;
+                getdata(index, mParam1);
                 lvPivtureSwipe.setRefreshing(true);
             }
         });
@@ -137,16 +129,15 @@ public class Lv_fragment_picture extends Fragment {
 //        getdata(index,mParam1);
         lvPictureRecycle.addOnScrollListener(new RecyclerView.OnScrollListener() {
             int listitemposation;
-            int []lastPositions;
+            int[] lastPositions;
+
             @Override
             public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
                 super.onScrollStateChanged(recyclerView, newState);
-                if(newState==RecyclerView.SCROLL_STATE_IDLE&&listitemposation+1==adapter.getItemCount()){
-                    index=index+1;
-                    getdata(index,mParam1);
-
+                if (newState == RecyclerView.SCROLL_STATE_IDLE && listitemposation + 1 == adapter.getItemCount()) {
+                    index = index + 1;
+                    getdata(index, mParam1);
                 }
-
             }
 
             @Override
@@ -157,15 +148,18 @@ public class Lv_fragment_picture extends Fragment {
                 }
                 layoutManager.findLastVisibleItemPositions(lastPositions);
                 listitemposation = findMax(lastPositions);
-
-
             }
         });
-
-
         return view;
 
     }
+
+    public void init(View view) {
+        lvPictureLoading = (AVLoadingIndicatorView) view.findViewById(R.id.lv_picture_loading);
+        lvPictureRecycle = (RecyclerView) view.findViewById(R.id.lv_picture_recycle);
+        lvPivtureSwipe = (SwipeRefreshLayout) view.findViewById(R.id.lv_pivture_swipe);
+    }
+
 
     @Override
     public void onDestroyView() {
@@ -258,18 +252,18 @@ public class Lv_fragment_picture extends Fragment {
         public PictureHolder(View itemView) {
             super(itemView);
 
-                img_item = (ImageView) itemView.findViewById(R.id.pivture_item_img);
+            img_item = (ImageView) itemView.findViewById(R.id.pivture_item_img);
 
         }
     }
 
     public void getdata(final int index, final String id) {
-        Log.e("*******",index+"");
+        Log.e("*******", index + "");
         new Thread(new Runnable() {
             @Override
             public void run() {
                 PictureBean bean = null;
-             String url=Urls.URL_PICTURE_LIST+"page="+index+"&rows=40&id="+id;
+                String url = Urls.URL_PICTURE_LIST + "page=" + index + "&rows=40&id=" + id;
                 Request request = new Request.Builder().url(url).get().build();
                 try {
                     Response response = myokhttpclient.newCall(request).execute();
@@ -291,11 +285,12 @@ public class Lv_fragment_picture extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
-        index=1;
+        index = 1;
         L.clear();
-        getdata(index,mParam1);
+        getdata(index, mParam1);
         lvPivtureSwipe.setRefreshing(true);
     }
+
     private int findMax(int[] lastPositions) {
         int max = lastPositions[0];
         for (int value : lastPositions) {
