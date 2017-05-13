@@ -77,7 +77,7 @@ public class lv_music_fragment extends Fragment {
 
                           ContentValues values = new ContentValues();
                           values.put("num", "1");
-                          values.put("musicname", s.getSonginfo().getAlbum_title());
+                          values.put("musicname", s.getSonginfo().getTitle());
                           values.put("file_link", s.getBitrate().getFile_link());
                           values.put("author", s.getSonginfo().getAuthor());
                           db.insert("music", null, values);

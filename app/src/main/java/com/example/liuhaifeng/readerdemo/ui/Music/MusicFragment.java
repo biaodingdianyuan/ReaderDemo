@@ -67,11 +67,14 @@ public class MusicFragment extends Fragment {
     TextView songTime;
     boolean t = false;
     SQLiteSongBean bean;
-    List<SQLiteSongBean> list_song_sql;
+    static List<SQLiteSongBean> list_song_sql;
     MusicSAdapter adapter;
-    int p = 0;
+    static int p = 0;
     @InjectView(R.id.music_fragment_name)
     TextView musicFragmentName;
+    @InjectView(R.id.no_music)
+    TextView noMusic;
+    String u = null;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -82,11 +85,13 @@ public class MusicFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_music, container, false);
         ButterKnife.inject(this, view);
-        Play play = new Play(progressBar, timeNow, songTime);
         list_song_sql = new ArrayList<SQLiteSongBean>();
-        musicFragmentName.setText("喵小姐");
         getsongfromsql();
-
+        if (list_song_sql.size() > 0) {
+            musicFragmentName.setText(list_song_sql.get(p).getMusicname());
+        }
+        noMusic.setVisibility(View.GONE);
+        Play play = new Play(progressBar, timeNow, songTime, list_song_sql, musicFragmentName);
         listSongItem.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, final int position, long id) {
@@ -102,11 +107,11 @@ public class MusicFragment extends Fragment {
                 linSongList.setVisibility(View.GONE);
                 imgSongStart.setImageDrawable(getResources().getDrawable(R.mipmap.btn_pause_normal));
                 flg = true;
+
             }
         });
         return view;
     }
-
 
     @Override
     public void onResume() {
@@ -117,20 +122,19 @@ public class MusicFragment extends Fragment {
             imgSongStart.setImageDrawable(getResources().getDrawable(R.mipmap.btn_pause_normal));
             flg = true;
             list_song_sql.clear();
-
             getsongfromsql();
-            musicFragmentName.setText(list_song_sql.get(list_song_sql.size()-1).getMusicname());
+            if (list_song_sql.size() > 0) {
+                musicFragmentName.setText(list_song_sql.get(list_song_sql.size() - 1).getMusicname());
 
                 new Thread(new Runnable() {
                     @Override
                     public void run() {
-                        Play.playUrl(list_song_sql.get(list_song_sql.size()-1).getFilelink());
+                        Play.playUrl(list_song_sql.get(list_song_sql.size() - 1).getFilelink());
                     }
                 }).start();
             }
-
+        }
     }
-
 
     @Override
     public void onDestroyView() {
@@ -169,15 +173,25 @@ public class MusicFragment extends Fragment {
                 } else {
                     imgSongStart.setImageDrawable(getResources().getDrawable(R.mipmap.btn_pause_normal));
                     if (i == 0) {
+
+                        if (list_song_sql.size() > 0) {
+                            u = list_song_sql.get(p).getFilelink();
+                            musicFragmentName.setText(list_song_sql.get(p).getMusicname());
+                        } else {
+                            u = Urls.URL_MUSIC_SONG;
+                            musicFragmentName.setText("喵小姐");
+                        }
                         new Thread(new Runnable() {
                             @Override
                             public void run() {
-                                Play.playUrl(Urls.URL_MUSIC_SONG);
+                                Play.playUrl(u);
                             }
                         }).start();
+
                     } else {
                         Play.play();
                     }
+
                     flg = true;
                 }
                 break;
@@ -199,6 +213,12 @@ public class MusicFragment extends Fragment {
             case R.id.img_music_list:
                 linSongTool.setVisibility(View.GONE);
                 linSongList.setVisibility(View.VISIBLE);
+                if (list_song_sql.size() == 0) {
+                    noMusic.setVisibility(View.VISIBLE);
+                } else {
+                    noMusic.setVisibility(View.GONE);
+                }
+
                 break;
             case R.id.img_song:
                 linSongTool.setVisibility(View.VISIBLE);
@@ -276,5 +296,18 @@ public class MusicFragment extends Fragment {
         }
     }
 
+    public static void donext() {
+        if (p + 1 == list_song_sql.size()) {
+            p = 0;
+        } else {
+            p = p + 1;
+        }
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                Play.playUrl(list_song_sql.get(p).getFilelink());
+            }
+        }).start();
+    }
 
 }

@@ -2,7 +2,6 @@
     <com.jude.rollviewpager.RollPagerView
         xmlns:android="http://schemas.android.com/apk/res/android"
         android:id="@+id/lv_new_img"
-        android:visibility="gone"
         android:layout_width="match_parent"
         android:layout_height="160dp">
     </com.jude.rollviewpager.RollPagerView>

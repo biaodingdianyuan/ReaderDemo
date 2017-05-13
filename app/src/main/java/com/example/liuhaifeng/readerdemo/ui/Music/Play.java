@@ -9,6 +9,7 @@ import android.widget.TextView;
 
 import java.io.IOException;
 import java.text.SimpleDateFormat;
+import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -20,14 +21,18 @@ public class Play implements MediaPlayer.OnBufferingUpdateListener, MediaPlayer.
     public static MediaPlayer mediaPlayer; // 媒体播放器
     private SeekBar seekBar; // 拖动条
     private Timer mTimer = new Timer(); // 计时器
-    private TextView time,song_time;
+    private TextView time,song_time, musicname;
+    private static String  urls;
 static int i=0;
+    List<SQLiteSongBean> list;
     // 初始化播放器
-    public Play(SeekBar seekBar, TextView time,TextView song_time) {
+    public Play(SeekBar seekBar, TextView time, TextView song_time, List<SQLiteSongBean> list,TextView  musicname) {
         super();
         this.seekBar = seekBar;
         this.time=time;
         this.song_time=song_time;
+        this.musicname=musicname;
+        this.list=list;
         try {
             mediaPlayer = new MediaPlayer();
             mediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);// 设置媒体流类型
@@ -57,11 +62,24 @@ static int i=0;
         public void handleMessage(android.os.Message msg) {
             int position = mediaPlayer.getCurrentPosition();
             int duration = mediaPlayer.getDuration();
+            long pos = 0;
             if (duration > 0) {
                 // 计算进度（获取进度条最大刻度*当前音乐播放位置 / 当前音乐时长）
-                long pos = seekBar.getMax() * position / duration;
+                pos = seekBar.getMax() * position / duration;
                 seekBar.setProgress((int) pos);
+                Log.d("*********",pos+"");
+                if(pos==99){
+                    MusicFragment.donext();
+                    if(list.size()>0){
+                        for(int i=0;i<list.size();i++){
+                            if(list.get(i).getFilelink().equals(urls)){
+                                musicname.setText(list.get(i).getMusicname());
+                            }
+                    }
+                    }
             }
+            }
+
             SimpleDateFormat formatter = new SimpleDateFormat("mm:ss");
             song_time.setText(formatter.format(mediaPlayer.getDuration())+"");
             time.setText(formatter.format(mediaPlayer.getCurrentPosition())+"");
@@ -79,6 +97,7 @@ static int i=0;
      *            url地址
      */
     public static void playUrl(String url) {
+        urls=url;
         try {
             mediaPlayer.reset();
             mediaPlayer.setDataSource(url); // 设置数据源

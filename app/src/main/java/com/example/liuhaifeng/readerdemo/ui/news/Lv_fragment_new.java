@@ -51,7 +51,7 @@ public class Lv_fragment_new extends Fragment {
     RecycleAdapter adapter_recy;
     NewsBean news;
     List<Data> d;
-    int page=1;
+    int page = 1;
     LinearLayoutManager linearLayoutManager;
     AVLoadingIndicatorView lvNewLoading;
     private String mParam1;
@@ -85,11 +85,9 @@ public class Lv_fragment_new extends Fragment {
                         }
                     }
                     if (!img[0].equals("") && !img[1].equals("") && !img[2].equals("")) {
-                        rollPagerView.setVisibility(View.VISIBLE);
                         rollPagerView.setAdapter(new TestNormalAdapter(img, title));
                         adapter_recy.setHeaderView(rollPagerView);
                     } else {
-                        rollPagerView.setVisibility(View.GONE);
                     }
                     d.addAll(news.getData());
                     adapter_recy.notifyDataSetChanged();
@@ -120,18 +118,19 @@ public class Lv_fragment_new extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.fragment_lv, container, false);
         init(view);
+        d = new ArrayList<Data>();
         new Thread(new Runnable() {
             @Override
             public void run() {
                 d.clear();
-                new OkHttpUtil().getdata(mParam1, myhandler,1);
+                new OkHttpUtil().getdata(mParam1, myhandler, 1);
             }
         }).start();
-        d = new ArrayList<Data>();
-        adapter_recy = new RecycleAdapter(getActivity(), d,mParam1);
+
+        adapter_recy = new RecycleAdapter(getActivity(), d, mParam1);
         View p = inflater.inflate(R.layout.picturecarouselview, null);
         linearLayoutManager = new LinearLayoutManager(getActivity());
-        linearLayoutManager=new LinearLayoutManager(getActivity(), LinearLayout.VERTICAL, false);
+        linearLayoutManager = new LinearLayoutManager(getActivity(), LinearLayout.VERTICAL, false);
         lvNewRv.setLayoutManager(linearLayoutManager);
         lvNewRv.setItemAnimator(new DefaultItemAnimator());
         lvNewRv.setAdapter(adapter_recy);
@@ -142,7 +141,7 @@ public class Lv_fragment_new extends Fragment {
                     @Override
                     public void run() {
                         d.clear();
-                        new OkHttpUtil().getdata(mParam1, myhandler,1);
+                        new OkHttpUtil().getdata(mParam1, myhandler, 1);
                     }
                 }).start();
             }
@@ -150,32 +149,34 @@ public class Lv_fragment_new extends Fragment {
 
         lvNewRv.addOnScrollListener(new RecyclerView.OnScrollListener() {
             int listitemposition;
+
             @Override
             public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
                 super.onScrollStateChanged(recyclerView, newState);
-                if(listitemposition+1==adapter_recy.getItemCount()&& newState==RecyclerView.SCROLL_STATE_IDLE){
-                    page=page+1;
+                if (listitemposition + 1 == adapter_recy.getItemCount() && newState == RecyclerView.SCROLL_STATE_IDLE) {
+                    page = page + 1;
                     new Thread(new Runnable() {
                         @Override
                         public void run() {
-                            new OkHttpUtil().getdata(mParam1, myhandler,page);
+                            new OkHttpUtil().getdata(mParam1, myhandler, page);
                         }
                     }).start();
                 }
             }
+
             @Override
             public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
                 super.onScrolled(recyclerView, dx, dy);
-                listitemposition=linearLayoutManager.findLastVisibleItemPosition();
+                listitemposition = linearLayoutManager.findLastVisibleItemPosition();
             }
         });
         return view;
     }
 
-    public void init(View views){
-        lvNewRv= (RecyclerView) views.findViewById(R.id.lv_new_Rv);
-        lvNewSrl= (SwipeRefreshLayout) views.findViewById(R.id.lv_new_srl);
-        lvNewLoading= (AVLoadingIndicatorView) views.findViewById(R.id.lv_new_loading);
+    public void init(View views) {
+        lvNewRv = (RecyclerView) views.findViewById(R.id.lv_new_Rv);
+        lvNewSrl = (SwipeRefreshLayout) views.findViewById(R.id.lv_new_srl);
+        lvNewLoading = (AVLoadingIndicatorView) views.findViewById(R.id.lv_new_loading);
 
     }
 

@@ -16,7 +16,7 @@
             android:id="@+id/music_fragment_name"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="1321"
+
             android:layout_alignBaseline="@+id/musics"
             android:layout_alignBottom="@+id/musics"
             android:layout_centerHorizontal="true" />
@@ -40,7 +40,8 @@
             android:id="@+id/imageView3"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            app:srcCompat="@mipmap/music" />
+            app:srcCompat="@mipmap/barkground"
+            />
 
         <TextView
             android:id="@+id/song_word"
@@ -124,6 +125,7 @@
     <LinearLayout
         android:id="@+id/lin_song_list"
         android:layout_weight="1"
+        android:orientation="vertical"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
         <ListView
@@ -131,6 +133,14 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
         </ListView>
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:id="@+id/no_music"
+            android:gravity="center"
+            android:layout_gravity="center_vertical|center_horizontal"
+            android:text="还没有音乐"
+            />
 
     </LinearLayout>
 
